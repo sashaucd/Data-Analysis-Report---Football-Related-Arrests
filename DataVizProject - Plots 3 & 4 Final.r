@@ -1,4 +1,5 @@
-library(tidyverse)
+# Load libraries
+library(tidyverse) 
 library(scales)  # For better number formatting
 library(RColorBrewer)  # For enhanced color palettes
 
