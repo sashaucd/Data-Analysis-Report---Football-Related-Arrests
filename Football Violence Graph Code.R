@@ -13,7 +13,7 @@ ggplot(football, aes(x = season, y = number_of_arrests)) +
   labs( 
     x = "Season",  
     y = "Number of arrests",
-    title= "Teams with over arrests a Season, 2019-2024"
+    title= "Teams with over three arrests a season, 2019-2024"
 ) +
   theme_bw() +
   theme(legend.title = element_blank(), 
