@@ -4,7 +4,7 @@ library("ggrepel")
 
 football <- read_csv("C:/Users/dshee/Downloads/final_dataset_with_rankings (1).csv")
 
-plot1 <- ggplot(football, aes(x = season, y = number_of_arrests)) +
+ggplot(football, aes(x = season, y = number_of_arrests)) +
   geom_point(aes(colour= offence_type)) +
   geom_label_repel(
     data = filter(football, number_of_arrests > 3),
@@ -12,14 +12,15 @@ plot1 <- ggplot(football, aes(x = season, y = number_of_arrests)) +
   ) +
   labs( 
     x = "Season",  
-    y = "Number of arrests"  
+    y = "Number of arrests",
+    title= "Teams with over arrests a Season, 2019-2024"
 ) +
-  theme_minimal() +
+  theme_bw() +
   theme(legend.title = element_blank(), 
-           legend.position = "bottom")
-ggsave(plot1, )
+           legend.position = "bottom",
+        legend.text= element_text(size=8)
+        )
 
-print(plot1)
 
 football <- football %>%
   mutate(club_supported = case_when(
@@ -29,8 +30,6 @@ football <- football %>%
     club_supported == "arsenal" ~ "Arsenal",
     TRUE ~ club_supported  # Keep other values unchanged
   ))
-
-library(dplyr)
 
 football <- football %>%
   mutate(offence_type = case_when(
