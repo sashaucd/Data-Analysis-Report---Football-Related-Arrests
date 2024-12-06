@@ -11,7 +11,7 @@ Economic Indicators Data:
 Football Team Rankings Data: 
 https://github.com/jfjelstul/englishfootball/tree/master
 
-
+CVD friendly Color schemes used for the plots: 
   
 
 
