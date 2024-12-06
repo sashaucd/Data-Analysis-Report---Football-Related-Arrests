@@ -6,7 +6,7 @@ Data Sources:
 Core Data: 
 https://www.gov.uk/government/statistics/football-related-arrests-and-banning-orders-2022-to-2023-season/football-related-arrests-and-banning-orders-england-and-wales-2022-to-2023-season#s3  (Specific file on the website: 'Football related arrest statistics, England and Wales: detailed datasets')
 
-Economic Indicators Data: 
+Economic Indicators Data: https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/monthlygrossdomesticproductbygrossvalueadded
 
 Football Team Rankings Data: 
 https://github.com/jfjelstul/englishfootball/tree/master
