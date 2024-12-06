@@ -12,7 +12,9 @@ Football Team Rankings Data:
 https://github.com/jfjelstul/englishfootball/tree/master
 
 CVD friendly Color schemes used for the plots: 
-  
+  - viridis: Colorblind-Friendly Color Maps for R (https://cran.r-project.org/web/packages/viridis/index.html)
+  - Custom colors & CVD friendly schemes - colorblind-friendly brewer palettes like RdYlBu via library(RColorBrewer) - https://www.datanovia.com/en/blog/the-a-z-of-rcolorbrewer-palette/#:~:text=RdYlBu%2C%20RdYlGn%2C%20Spectral-,Show%20only%20colorblind%2Dfriendly%20brewer%20palettes,-To%20display%20only
+
 
 
 
