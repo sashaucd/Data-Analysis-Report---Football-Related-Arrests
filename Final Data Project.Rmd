@@ -1,0 +1,233 @@
+---
+title: "Final Data Project"
+output: html_document
+date: "2024-11-29"
+---
+
+```{r setup, include=FALSE}
+setwd('/Users/jackoconnell/Desktop/ADWV')
+library(ggplot2)
+library(car)
+library(ggfortify)
+library(kdensity)
+library(tseries)
+library(lmtest)
+library(broom)
+library(tidyverse)
+library(marginaleffects)
+library(readxl)
+library(ggfortify)
+library(modelsummary)
+library(lmtest)
+library (stargazer)
+library(ggfortify)
+library(lmtest)
+library(fixest)
+library(ivreg)
+library(gmm)
+library(ggbeeswarm)
+library(ggrepel)
+
+
+library(readxl)
+fb_arrests_monthly_gdp <- read_excel("fb_arrests_monthly_gdp.xlsx")
+View(fb_arrests_monthly_gdp)
+
+```
+
+
+```{r}
+# Create the home variable
+home=fb_arrests_monthly_gdp$home <- ifelse(fb_arrests_monthly_gdp$home_team == fb_arrests_monthly_gdp$club_supported, 1, 0)
+# Boxplot
+ggplot(data=fb_arrests_monthly_gdp)+
+  aes(x=factor(home), y = number_of_arrests)+
+  geom_point(shape = 16, alpha = 0.5)+#EXPERIMENT WITH THIS
+  geom_boxplot(colour = "red", outlier.color = NA) +
+  geom_jitter(alpha = 0.2, size = 1) +
+  labs(x = "Home", y = "Arrests") +
+  labs(x = "Home", y = "Number of Arrests", 
+       title = "Boxplot: Arrests and Home/Away Support", 
+       subtitle = "Home supporter = 1")
+
+```
+
+```{r}
+# Number of arrests over time,
+library(ggplot2)
+
+ggplot(data = fb_arrests_monthly_gdp) +
+  aes(x = date, y = number_of_arrests) +
+  geom_point() +
+  geom_smooth(method = "loess") +
+  labs(x = "Date", y = "Number of Arrests", 
+       title = "Arrests", 
+       subtitle = "Number of Arrests vs. Time")
+```
+
+
+```{r}
+# Summary statistics
+datasummary_skim(fb_arrests_monthly_gdp, histogram=T)
+
+library(modelsummary)
+
+number_of_arrests=fb_arrests_monthly_gdp$number_of_arrests
+home=fb_arrests_monthly_gdp$home
+GVA=fb_arrests_monthly_gdp$GVA=fb_arrests_monthly_gdp$'Gross Value Added - Monthly (Index 1dp) :CVM SA'
+home_team=fb_arrests_monthly_gdp$home_team
+away_team=fb_arrests_monthly_gdp$away_team
+GVA_numeric=fb_arrests_monthly_gdp$GVA_numeric <- as.numeric(gsub("GVA", "", as.character(GVA)))
+
+`````````
+
+
+
+
+```{r}
+# create the variables home and away, where home = 1 if offender was supporting a team was at home and zero if the offender supports a clud that was playing away, 
+# if home_team = club_supported
+home=fb_arrests_monthly_gdp$home <- ifelse(fb_arrests_monthly_gdp$home_team == fb_arrests_monthly_gdp$club_supported, 1, 0)
+ggplot(data = fb_arrests_monthly_gdp)+
+  aes(x = home, y =  number_of_arrests)+
+  stat_summary(
+    fun.data = mean_cl_normal,
+    linewidth = 0.8, size = 0.5
+  ) +
+  geom_point()+#TIHS LOOKS WEIRD FOR SOME REASON: shape = fb_arrests_monthly_gdp$competition
+  geom_smooth(method = "loess")+
+  theme_minimal()+#TRY method = "loess" WHERE RELEVANT
+  labs(x = "Home", y = "Arrests") +
+  labs(x = "Home", y = "Number of Arrests", 
+       title = "Arrests are equal for Home and Away supporters", 
+       subtitle = "Arrests vs. Home/Away")
+
+                      )
+```
+
+```{r}
+### Regression equations for part 4, ###
+# x = home, y =  number_of_arrests
+regression1_1=lm(number_of_arrests~home, data = fb_arrests_monthly_gdp)
+# x=GVA, y=number_of_arrests
+GVA=fb_arrests_monthly_gdp$'Gross Value Added - Monthly (Index 1dp) :CVM SA'
+GVA_numeric=fb_arrests_monthly_gdp$GVA_numeric <- as.numeric(gsub("GVA", "", as.character(GVA)))
+Arrests=fb_arrests_monthly_gdp$number_of_arrests
+Season_2021=fb_arrests_monthly_gdp$season2020/21
+Season_2022=fb_arrests_monthly_gdp$season2020/21
+Season_2023=fb_arrests_monthly_gdp$season2020/21
+
+# Regress arrests on the home variable
+regression0_1=lm(Arrests~home, data = fb_arrests_monthly_gdp)
+regression0_2=lm(Arrests~home+GVA_numeric+season, data = fb_arrests_monthly_gdp)
+modelsummary(list(regression0_1, regression0_2))
+
+# Regress arrests on the GVA variable
+regression1_4=lm(Arrests~GVA_numeric, data = fb_arrests_monthly_gdp)
+regression2_4=lm(Arrests~GVA_numeric+home+season, data = fb_arrests_monthly_gdp)
+modelsummary(list(regression1_4, regression2_4))
+
+```
+
+
+```{r}
+unique__offences <- unique(fb_arrests_monthly_gdp$offence_type)
+print(unique__offences)
+
+# create a dummy variable for each type of offence to be regressed, 
+violent_disorder <- ifelse(fb_arrests_monthly_gdp$offence_type == "violent_disorder", 1, 0)
+public_disorder  <- ifelse(fb_arrests_monthly_gdp$offence_type == "public_disorder", 1, 0)
+throwing_missiles  <- ifelse(fb_arrests_monthly_gdp$offence_type == "throwing_missiles", 1, 0)
+entering_the_pitch  <- ifelse(fb_arrests_monthly_gdp$offence_type == "entering_the_pitch", 1, 0)
+possession_pyrotechnics  <- ifelse(fb_arrests_monthly_gdp$offence_type == "possession_pyrotechnics", 1, 0)
+alcohol_offences  <- ifelse(fb_arrests_monthly_gdp$offence_type == "alcohol_offences", 1, 0)
+racist_indecent_chanting  <- ifelse(fb_arrests_monthly_gdp$offence_type == "racist_indecent_chanting", 1, 0)
+ticket_touting  <- ifelse(fb_arrests_monthly_gdp$offence_type == "ticket_touting", 1, 0)
+breach_of_banning_order  <- ifelse(fb_arrests_monthly_gdp$offence_type == "breach_of_banning_order", 1, 0)
+criminal_damage  <- ifelse(fb_arrests_monthly_gdp$offence_type == "criminal_damage", 1, 0)
+entering_inside_stadiums_in_possession_of_class_a_drugs  <- ifelse(fb_arrests_monthly_gdp$offence_type == "entering_inside_stadiums_in_possession_of_class_a_drugs", 1, 0)
+
+violent_disorder_regression=lm(violent_disorder~home+GVA_numeric+season, data = fb_arrests_monthly_gdp)
+public_disorder_regression=lm(public_disorder~home+GVA_numeric+season, data = fb_arrests_monthly_gdp) 
+throwing_missiles_regression=lm(throwing_missiles~home+GVA_numeric+season, data = fb_arrests_monthly_gdp) 
+entering_the_pitch_regression=lm(entering_the_pitch~home+GVA_numeric+season, data = fb_arrests_monthly_gdp) 
+possession_pyrotechnics_regression=lm(possession_pyrotechnics~home+GVA_numeric+season, data = fb_arrests_monthly_gdp)  
+alcohol_offences_regression=lm(alcohol_offences~home+GVA_numeric+season, data = fb_arrests_monthly_gdp)
+racist_indecent_chanting_regression=lm(racist_indecent_chanting~home+GVA_numeric+season, data = fb_arrests_monthly_gdp) 
+ticket_touting_regression=lm(ticket_touting~home+GVA_numeric+season, data = fb_arrests_monthly_gdp) 
+breach_of_banning_order_regression=lm(breach_of_banning_order~home+GVA_numeric+season, data = fb_arrests_monthly_gdp) 
+criminal_damage_regression=lm(criminal_damage~home+GVA_numeric+season, data = fb_arrests_monthly_gdp) 
+entering_inside_stadiums_in_possession_of_class_a_drugs_regression=lm(entering_inside_stadiums_in_possession_of_class_a_drugs~home+GVA_numeric+season, data = fb_arrests_monthly_gdp)  
+
+modelsummary(list(violent_disorder_regression, public_disorder_regression, throwing_missiles_regression, entering_the_pitch_regression, possession_pyrotechnics_regression, alcohol_offences_regression, racist_indecent_chanting_regression, ticket_touting_regression, breach_of_banning_order_regression, criminal_damage_regression, entering_inside_stadiums_in_possession_of_class_a_drugs_regression))
+
+```
+
+
+
+```{r}
+unique__comp <- unique(fb_arrests_monthly_gdp$competition)
+print(unique__comp)
+```
+
+
+```{r}
+# Plot GVA over time
+GVA=fb_arrests_monthly_gdp$'Gross Value Added - Monthly (Index 1dp) :CVM SA'
+offence_type=fb_arrests_monthly_gdp$offence_type
+  
+ggplot(data = fb_arrests_monthly_gdp)+
+  aes(x=GVA, y=number_of_arrests, colour=offence_type)+
+  geom_point() +
+  geom_smooth()+
+  geom_label_repel(data = filter(fb_arrests_monthly_gdp, number_of_arrests > 2),
+  aes(label = number_of_arrests), alpha = 0.8, size = 2
+  )+
+  theme_minimal()+ theme(legend.position = "bottom")+ 
+  labs(x = "GVA", y = "Arrests") 
+
+
+
+```
+
+
+
+```{r}
+### Outliers: checking for them, running regressions w/o them ###
+autoplot(regressions_4) +
+  theme_bw(base_size=14)
+
+autoplot(regression1_4) +
+  theme_bw(base_size=14)
+
+autoplot(regression2_4) +
+  theme_bw(base_size=14)
+
+influenceIndexPlot(regressions_4, vars = "hat",
+                   id=F, main = "Leverage (hat values)")
+influenceIndexPlot(regressions_4, vars = "Studentized",
+                   id=F, main = "Studentized Residuals")
+influenceIndexPlot(regressions_4, vars = "Cook",
+                   id=F, main = "Cook's distance")
+
+# regression w/o outliers
+regressions_4_wo <- lm(number_of_arrests~GVA_numeric+home+season+competition+date+offence_type+club_supported, data = fb_arrests_monthly_gdp %>%  slice(-54)) 
+modelplot(list(regressions_4, regressions_4_wo),
+          coef_omit = 'Interc')+
+  geom_vline(xintercept = 0,size=0.2,colour="red")
+
+regression2_4_wo <- lm(number_of_arrests~GVA_numeric+home+season+competition+date+offence_type, data = fb_arrests_monthly_gdp %>%  slice(-54)) 
+modelplot(list(regression2_4, regression2_4_wo),
+          coef_omit = 'Interc')+
+  geom_vline(xintercept = 0,size=0.2,colour="red")
+
+# normality of residuals
+fb_arrests_monthly_gdp$ehat <- regression2_4$residuals
+# density
+kde = kdensity(fb_arrests_monthly_gdp$ehat, start = "normal", kernel = "gaussian")  #initial assumption on distribution is normal, use gaussian kernel for smoothing
+plot(kde, main = "Kernel Density Estimate")     # plot the kernel density, main is the title
+lines(kde, plot_start = TRUE, col = "red")     # add also the initial assumption on the distribution i.e. normal with mean and sd as in the data
+ggsave(filename = "boxplot.png")
+
+
+```
