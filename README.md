@@ -19,7 +19,7 @@ Steps to merge the datasets:
 1) Merge core arrests data with Economic Indicators - Runi this script - [R Script] Merge Football Arrests Data with Economic Indicators Data.r
 2) Merge Rankings data with the optput from step 1 listed above to get the final dataset - Run this R script - [R Script] Football_Rankings_Merged.r
 
-Steps to porduce the plots:
+Steps to reproduce the plots:
 1) Football Related Arrests by season - DataVizProject-Plot3.png - Run this script - [R Script] DataVizProject - Plots 3 & 4 Final.r
 2) Football Related Arrests - Home vs Away Supproters - DataVizProject-Plot4.png - Run this script - [R Script] DataVizProject - Plots 3 & 4 Final.r
 
