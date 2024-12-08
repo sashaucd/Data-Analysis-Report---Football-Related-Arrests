@@ -21,6 +21,6 @@ Steps to merge the datasets:
 
 Steps to reproduce the plots:
 1) Football Related Arrests by season - DataVizProject-Plot3.png - Run this script - [R Script] DataVizProject - Plots 3 & 4 Final.r
-2) Football Related Arrests - Home vs Away Supproters - DataVizProject-Plot4.png - Run this script - [R Script] DataVizProject - Plots 3 & 4 Final.r
+2) Football Related Arrests - Home vs Away Supporters - DataVizProject-Plot4.png - Run this script - [R Script] DataVizProject - Plots 3 & 4 Final.r
 
 
