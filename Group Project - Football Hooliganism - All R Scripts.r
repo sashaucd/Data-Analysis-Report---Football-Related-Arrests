@@ -1,3 +1,18 @@
+# Load required libraries ----
+library(tidyverse)
+library(readxl)
+library(scales)
+library(RColorBrewer)
+library(ggrepel)
+library(viridis)
+library(modelsummary)
+library(car)
+library(lmtest)
+library(broom)
+library(kdensity)
+library(fixest)
+
+
 #  Merging Arrests Data with Economic Indicators: 
 
 # load the dataset
